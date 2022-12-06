@@ -12,16 +12,20 @@ fun main() {
 
     println("SignalMarker = ${findSignalMarker(line1)}")
 
-    check(findSignalMarker("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 14) == 19)
-    check(findSignalMarker("bvwbjplbgvbhsrlpgdmjqwftvncz", 14) == 23)
-    check(findSignalMarker("nppdvjthqldpwncqszvftbrmjlhg", 14) == 23)
-    check(findSignalMarker("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", 14) == 29)
-    check(findSignalMarker("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 14) == 26)
+    check(findMessageMarker("mjqjpqmgbljsphdztnvjfqwrcgsmlb") == 19)
+    check(findMessageMarker("bvwbjplbgvbhsrlpgdmjqwftvncz") == 23)
+    check(findMessageMarker("nppdvjthqldpwncqszvftbrmjlhg") == 23)
+    check(findMessageMarker("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg") == 29)
+    check(findMessageMarker("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw") == 26)
 
-    println("Message marker = ${findSignalMarker(line1, 14)}" )
+    println("Message marker = ${findMessageMarker(line1)}")
 }
 
-fun findSignalMarker(signalSeq: String, windowSize: Int = 4): Int {
+fun findSignalMarker(signalSeq: String) = findIndex(signalSeq, 4)
+fun findMessageMarker(signalSeq: String) = findIndex(signalSeq, 14)
+
+
+fun findIndex(signalSeq: String, windowSize: Int): Int {
     val takeWhile = signalSeq.windowed(windowSize, 1, false).takeWhile { it.toSet().size < windowSize }
     return takeWhile.size + windowSize
 }
