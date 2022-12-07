@@ -6,7 +6,7 @@ sealed class Node(val name: String, val level: String) {
     abstract fun size():Int
     override fun toString(): String {
         return """
-                |${level}name: $name                
+            |${level}name: $name                
             """.trimIndent()
     }
     class Dir(name: String, level: String) : Node(name, level){
@@ -16,8 +16,8 @@ sealed class Node(val name: String, val level: String) {
         }
         override fun toString(): String {
             return """
-                |${level}name: $name
-                ${childs.forEach{it.toString()}}
+            |${level}name: $name
+            ${childs.joinToString(separator = "\n"){it.toString()}}
             """.trimIndent()
         }
 
@@ -45,10 +45,12 @@ fun parse(parentNode: Node, sublist:List<String>):Node{
         val indicies = sublist.filter { it.startsWith(parentNode.level + "-") }.map { sublist.indexOf(it) }
         indicies.windowed(2, 1, partialWindows = true).forEach { window ->
             println("Window $window")
-            val node = sublist[window[0]].toNode()
-            if(node is Node.Dir && window.size == 2)
+            val start = window[0]
+            val end = if(window.size == 2)window[1]else sublist.size
+            val node = sublist[start].toNode()
+            if(node is Node.Dir)
             {
-                val subSubList = sublist.subList(window[0]+1, window[1])
+                val subSubList = sublist.subList(start+1, end)
                 parse(node, subSubList)
             }
             (parentNode).childs.add(node)
