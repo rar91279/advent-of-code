@@ -34,8 +34,8 @@ fun main() {
 
 // Root
     val root = exampleInput[0].toNode()
-
-    println(parse(parentNode = root, exampleInput.subList(1, exampleInput.size)))
+    parse(parentNode = root, exampleInput.subList(1, exampleInput.size))
+    println(root)
 }
 
 
@@ -43,10 +43,14 @@ fun parse(parentNode: Node, sublist:List<String>):Node{
     if (parentNode is Node.Dir && sublist.isNotEmpty()){
         // Find all entries of same level and split into sub lists
         val indicies = sublist.filter { it.startsWith(parentNode.level + "-") }.map { sublist.indexOf(it) }
-        indicies.windowed(2, 1).forEach { (start, end) ->
-            val node = sublist[start].toNode()
-            if(node is Node.Dir)
-                parse(node, sublist.subList(start+1, end-1))
+        indicies.windowed(2, 1, partialWindows = true).forEach { window ->
+            println("Window $window")
+            val node = sublist[window[0]].toNode()
+            if(node is Node.Dir && window.size == 2)
+            {
+                val subSubList = sublist.subList(window[0]+1, window[1])
+                parse(node, subSubList)
+            }
             (parentNode).childs.add(node)
         }
     }
