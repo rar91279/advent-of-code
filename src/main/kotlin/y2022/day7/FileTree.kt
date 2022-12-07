@@ -106,9 +106,3 @@ fun String.toNode(current: Node.Dir): Node {
         Node.File(name, getSize(), current)
     }
 }
-
-
-
-
-
-
